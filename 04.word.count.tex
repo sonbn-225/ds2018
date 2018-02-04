@@ -1,0 +1,73 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
+\title{Report 4}
+\author{Vu Tuan Dat }
+\date{January 2018}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection{Members:\\-Bui Ngoc Son - USTHBI5-116\\-Vu Tuan Dat - USTHBI6-032\\-Tran Bao Duong - USTHBI6-030\\-Ha Anh Tuan - USTHBI6-143\\-Tran Thanh Tung - USTHBI5-149}
+\section{Question1}
+\subsection{ Why you chose your specific MapReduce implementation\\
+-We choose hadoop framework because it allows distributed processing of large datasets across clusters of computers using simple programming models. Moreover, Hadoop is an Apache top-level project being built and used by a global community of contributors and users.
+}
+\section{Question2}
+\subsection{-Split file into words\\
+-Group each word with 1 snippet}
+\section{Question4}
+\subsection{Code snippet:\\
+public static class Map
+       extends Mapper<Object, Text, Text, IntWritable>{
+    private final static IntWritable one = new IntWritable(1);
+    private Text word = new Text();
+    public void map(Object key, Text value, Context context
+                    ) throws IOException, InterruptedException {
+      StringTokenizer itr = new StringTokenizer(value.toString());
+      while (itr.hasMoreTokens()) {  //divide text file into word and 
+        word.set(itr.nextToken());    
+        context.write(word, one);    // add feature 1 to each word
+      }
+    }
+  }
+
+Reducer:
+	combine group of all same word and each same word that are combined, will increase number of this word by 1
+
+public static class Reduce
+       extends Reducer<Text,IntWritable,Text,IntWritable> {
+    private IntWritable result = new IntWritable();
+    public void reduce(Text key, Iterable<IntWritable> values,
+                       Context context
+                       ) throws IOException, InterruptedException {
+      int sum = 0;
+      for (IntWritable val : values) {   //increate sum for each same word
+        sum += val.get();              
+      }
+      result.set(sum);
+      context.write(key, result);           //write word and number of time it appears
+    }
+  } 
+
+
+}
+\subsection{Who does what?\\
+-Son and Tuan: Working RPC.\\
+-Dat and Duong: Working MPI.\\
+-Tung: Write the report}
+\end{document}
+
+
+
+
+
+
+
+
+
+
